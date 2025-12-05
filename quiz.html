@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اختبار الاستماع (Hören)</title>
+<style>
+/* CSS للتنسيق */
+body {
+font-family: 'Arial', sans-serif;
+background-color: #f4f7f9;
+color: #333;
+line-height: 1.6;
+margin: 0;
+padding: 20px;
+}
+.container {
+max-width: 900px;
+margin: 0 auto;
+background: #fff;
+padding: 30px;
+border-radius: 12px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+h1, h2 {
+color: #0056b3;
+border-bottom: 3px solid #0056b3;
+padding-bottom: 10px;
+margin-bottom: 25px;
+text-align: center;
+}
+.quiz-section {
+margin-bottom: 40px;
+padding: 20px;
+border: 1px solid #ddd;
+border-radius: 8px;
+background-color: #fcfcfc;
+}
+.question-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 12px 0;
+border-bottom: 1px dashed #eee;
+}
+.question-item:last-child {
+border-bottom: none;
+}
+.question-text {
+flex-grow: 1;
+font-size: 1.1em;
+font-weight: bold;
+}
+.input-group {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.input-group input[type="text"] {
+padding: 8px;
+border: 1px solid #ccc;
+border-radius: 4px;
+width: 80px;
+text-align: center;
+font-size: 1em;
+}
+button {
+padding: 10px 15px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-weight: bold;
+transition: background-color 0.3s;
+}
+.check-btn {
+background-color: #28a745;
+color: white;
+}
+.check-btn:hover {
+background-color: #218838;
+}
+.reveal-btn {
+background-color: #ffc107;
+color: #333;
+}
+.reveal-btn:hover {
+background-color: #e0a800;
+}
+.result {
+margin-top: 10px;
+padding: 8px;
+border-radius: 4px;
+font-weight: bold;
+min-height: 20px; /* لضمان عدم اهتزاز التخطيط */
+text-align: center;
+width: 150px;
+}
+.correct {
+background-color: #d4edda;
+color: #155724;
+}
+.incorrect {
+background-color: #f8d7da;
+color: #721c24;
+}
+.revealed {
+background-color: #fff3cd;
+color: #856404;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>اختبار الاستماع (Hören)</h1>
+<p>قم بكتابة الرقم الصحيح المقابل لكل عنوان. اضغط على "تحقق" لمعرفة النتيجة، أو "إظهار الإجابة" إذا لم تعرف.</p>
+
+<div id="quiz-sections">
+</div>
+</div>
+
+<script>
+// البيانات التي استخرجتها من الصور
+const quizData = {
+'Hören teil 2': {
+'Bein wettkampf': '1246',
+'Lisa Eisenberg مع قطار النوم': '15368',
+'Mallorca (اساسي ومعدل)': '347',
+'Im restaurant': '13489',
+'Im restaurant مع الألبي': '134789',
+'Suza': '1348',
+'Suza مع البطاط': '71348',
+'Jolia': '51348',
+'Carina اساسي ومعدل': '139048',
+'Frau Shenk اساسي ومعدل': '16748',
+'نموذج الألب': '1748',
+'Nadin': '256038',
+'Karimov': '25890',
+'Steiner اساسي': '290',
+'Professor Steiner مع Sport ist gesund': '29014',
+'Markus ده بيجي مع الحلوى وبيبجي مع نماذج ثانية برده بس ده اللي بيجي مع البونبون': '24580',
+'Gassar und frau janke': '34890',
+'Die Tu Dresden': '135780',
+'Frau Keder aus Malta *': '124589',
+'Frau Keder aus Malta * معدل مع جروند شولي معدل *': '23670',
+'Vanessa': '234680',
+'Die zahl der deutschen *': '347',
+'Franz Schumacher *': '124680',
+'Herr Scherer *': '340',
+'Meron Makeba *': '459',
+'Die Berufseinstig': '134890',
+'Die Deutsche machen *': '3459',
+'Zu Beginn *': '1234689',
+'Roland Spielen': '347902',
+'Roland Aufsteigen': '3479',
+'Roland Höheren lige': '39258'
+},
+'Hören Teil 1 Neue': {
+'Teil 1 Beruf الحلوى': '14',
+'Der Bau': '134',
+'Erdbeeren ده اللي مع قطار النوم': '1245',
+'Fluaggesselschaft مع اي موضوع غير الحشرات': '15',
+'Fluaggesselschaft مع الحشرات': '135',
+'Frau jürgens/ Funk مع اي موضوع غير الحشرات': '345',
+'Frau jürgens مع الحشرات': '35',
+'Europäischen Union': '12',
+'Umwetterschaden': '14',
+'Es ist nicht sicher': '14',
+'Es ist unklar': '14',
+'Erdbeben': '15',
+'Lufthansa اساسي ومعدل': '23',
+'Bierkonsom': '24',
+'Deutsch Schiff': '125',
+'Viele Kunden....geboren, Weniger vögel (3)': '345',
+'Die wahlbeteiligung': '13',
+'Stadt friedrichsberg': '235',
+'In den Alpen': '23',
+'Insel Bali': '45',
+'Bio Spiegel': '15',
+'Die Bundesländer': '125',
+'Euro 50': '3',
+'Bei den Europawahlen': '45',
+'Das Schladminger': '125',
+'Manche Deutsch': '125',
+'Berlin': '15'
+},
+'Hören Teil 3 Neue': {
+'Teil 3 Das fest الحلوى': '135',
+'Training Auffahrten': '24',
+'Frankfurt ده اللي مع قطار النوم': '135',
+'Für ein Konzert': '24',
+'Radio Konzert': '13',
+'In Raum C 23': '2',
+'Ausgang 26 مع اي موضوع غير الليمون': '145',
+'Ausgang 26 مع الليمون': '15',
+'Deutsch telefon': '1',
+'Musikfestivals': '13',
+'Fahrschule': '14',
+'Süddeutschland/regen': '14',
+'Süddeutschland/schnee': '15',
+'Internet Pufen': '15',
+'Ehrenamts': '15',
+'Demonstration': '25',
+'Im August': '34',
+'Am wochenanfang': '123',
+'Fundbüro': '125',
+'Blutspenden': '1345',
+'Reitturnier': '13',
+'Delikatessen': '234',
+'Euro 50': '3',
+'Nach einer Großdemonstration': '2',
+'Sie hörenden Anrufbeantworter': '15',
+'Das Geschäft': '15',
+'Schlagminger Ski': '15',
+'Neu Autobahn': '34'
+}
+};
+
+const quizSectionsDiv = document.getElementById('quiz-sections');
+
+// وظيفة لتوليد نموذج الاختبار ديناميكياً
+function generateQuiz() {
+for (const [sectionTitle, questions] of Object.entries(quizData)) {
+// إنشاء قسم جديد
+const sectionDiv = document.createElement('div');
+sectionDiv.className = 'quiz-section';
+
+// عنوان القسم
+const sectionHeader = document.createElement('h2');
+sectionHeader.textContent = sectionTitle;
+sectionDiv.appendChild(sectionHeader);
+
+let questionIndex = 0; // مؤشر فريد لكل سؤال في القسم
+
+for (const [questionText, correctAnswer] of Object.entries(questions)) {
+// إنشاء عنصر السؤال
+const itemDiv = document.createElement('div');
+itemDiv.className = 'question-item';
+
+// نص السؤال
+const textSpan = document.createElement('span');
+textSpan.className = 'question-text';
+textSpan.textContent = questionText;
+itemDiv.appendChild(textSpan);
+
+// مجموعة الإدخال والأزرار والنتائج
+const inputGroup = document.createElement('div');
+inputGroup.className = 'input-group';
+
+// حقل الإدخال
+const inputField = document.createElement('input');
+inputField.type = 'text';
+inputField.placeholder = 'الرقم';
+inputField.id = `${sectionTitle}-${questionIndex}-input`;
+inputGroup.appendChild(inputField);
+
+// زر التحقق
+const checkButton = document.createElement('button');
+checkButton.className = 'check-btn';
+checkButton.textContent = 'تحقق';
+checkButton.onclick = () => checkAnswer(inputField.id, correctAnswer, resultDiv.id);
+inputGroup.appendChild(checkButton);
+
+// زر إظهار الإجابة
+const revealButton = document.createElement('button');
+revealButton.className = 'reveal-btn';
+revealButton.textContent = 'إظهار الإجابة';
+revealButton.onclick = () => revealAnswer(inputField.id, correctAnswer, resultDiv.id);
+inputGroup.appendChild(revealButton);
+
+// مكان عرض النتيجة
+const resultDiv = document.createElement('div');
+resultDiv.className = 'result';
+resultDiv.id = `${sectionTitle}-${questionIndex}-result`;
+inputGroup.appendChild(resultDiv);
+
+itemDiv.appendChild(inputGroup);
+sectionDiv.appendChild(itemDiv);
+
+questionIndex++;
+}
+quizSectionsDiv.appendChild(sectionDiv);
+}
+}
+
+// وظيفة التحقق من الإجابة
+function checkAnswer(inputId, correctAnswer, resultId) {
+const inputElement = document.getElementById(inputId);
+const resultElement = document.getElementById(resultId);
+const userAnswer = inputElement.value.trim();
+
+// إزالة تنسيقات النتيجة السابقة
+resultElement.className = 'result';
+
+if (userAnswer === correctAnswer) {
+resultElement.textContent = 'صحيحة! 🎉';
+resultElement.classList.add('correct');
+} else {
+resultElement.textContent = 'خاطئة. حاول مرة أخرى.';
+resultElement.classList.add('incorrect');
+}
+}
+
+// وظيفة إظهار الإجابة
+function revealAnswer(inputId, correctAnswer, resultId) {
+const inputElement = document.getElementById(inputId);
+const resultElement = document.getElementById(resultId);
+
+inputElement.value = correctAnswer; // ملء حقل الإدخال بالإجابة الصحيحة
+
+// إزالة تنسيقات النتيجة السابقة
+resultElement.className = 'result';
+
+resultElement.textContent = `الإجابة هي: ${correctAnswer}`;
+resultElement.classList.add('revealed');
+}
+
+// تشغيل توليد الاختبار عند تحميل الصفحة
+generateQuiz();
+</script>
+
+</body>
+</html>
