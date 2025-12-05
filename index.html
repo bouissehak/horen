@@ -5,41 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>اختبار الاستماع (Hören)</title>
 <style>
-/* CSS للتنسيق */
+/* CSS للتنسيق الأساسي (لجميع الشاشات) */
 body {
 font-family: 'Arial', sans-serif;
 background-color: #f4f7f9;
 color: #333;
 line-height: 1.6;
 margin: 0;
-padding: 20px;
+padding: 10px; /* تقليل الهامش للصفحات الصغيرة */
 }
 .container {
 max-width: 900px;
 margin: 0 auto;
 background: #fff;
-padding: 30px;
+padding: 20px; /* تقليل التبطين */
 border-radius: 12px;
 box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 h1, h2 {
 color: #0056b3;
 border-bottom: 3px solid #0056b3;
-padding-bottom: 10px;
-margin-bottom: 25px;
+padding-bottom: 8px;
+margin-bottom: 20px;
 text-align: center;
+font-size: 1.5em; /* تصغير الخط قليلاً */
 }
 .quiz-section {
-margin-bottom: 40px;
-padding: 20px;
+margin-bottom: 30px;
+padding: 15px;
 border: 1px solid #ddd;
 border-radius: 8px;
 background-color: #fcfcfc;
 }
+
+/* تنسيق العنصر الرئيسي للسؤال */
 .question-item {
 display: flex;
-justify-content: space-between;
-align-items: center;
+flex-direction: column; /* تغيير التخطيط إلى عمودي للهاتف */
+align-items: flex-start; /* محاذاة العناصر إلى اليمين */
 padding: 12px 0;
 border-bottom: 1px dashed #eee;
 }
@@ -48,52 +51,62 @@ border-bottom: none;
 }
 .question-text {
 flex-grow: 1;
-font-size: 1.1em;
+font-size: 1em; /* خط مناسب للقراءة على الهاتف */
 font-weight: bold;
+margin-bottom: 8px; /* مسافة بين العنوان ومجموعة الإدخال */
+word-wrap: break-word; /* لضمان كسر النص الطويل */
+width: 100%;
 }
+/* مجموعة الإدخال والأزرار (تصبح أفقية) */
 .input-group {
 display: flex;
 align-items: center;
-gap: 10px;
+flex-wrap: wrap; /* تسمح للأزرار بالنزول لسطر جديد إذا لم تتسع */
+gap: 5px; /* تقليل الفراغات */
+width: 100%;
 }
+
 .input-group input[type="text"] {
 padding: 8px;
 border: 1px solid #ccc;
 border-radius: 4px;
-width: 80px;
+width: 60px; /* عرض أقل لحقل الإدخال */
 text-align: center;
 font-size: 1em;
+box-sizing: border-box;
 }
+
 button {
-padding: 10px 15px;
+padding: 8px 12px; /* تقليل حجم الأزرار */
 border: none;
 border-radius: 4px;
 cursor: pointer;
 font-weight: bold;
+font-size: 0.9em; /* خط أصغر للأزرار */
 transition: background-color 0.3s;
 }
 .check-btn {
 background-color: #28a745;
 color: white;
-}
-.check-btn:hover {
-background-color: #218838;
+flex-grow: 1; /* للسماح للزر بالتوسع قليلاً */
+min-width: 70px;
 }
 .reveal-btn {
 background-color: #ffc107;
 color: #333;
-}
-.reveal-btn:hover {
-background-color: #e0a800;
+flex-grow: 1;
+min-width: 70px;
 }
 .result {
-margin-top: 10px;
-padding: 8px;
+margin-top: 0;
+padding: 5px;
 border-radius: 4px;
 font-weight: bold;
-min-height: 20px; /* لضمان عدم اهتزاز التخطيط */
+font-size: 0.8em;
+min-height: 20px;
 text-align: center;
-width: 150px;
+width: 100%; /* عرض كامل للرسالة لتكون واضحة */
+box-sizing: border-box;
 }
 .correct {
 background-color: #d4edda;
@@ -107,7 +120,37 @@ color: #721c24;
 background-color: #fff3cd;
 color: #856404;
 }
+
+/* --- استعلام الوسائط (Media Query) للشاشات الكبيرة (مثل الحاسوب اللوحي أو الحاسوب المكتبي) --- */
+@media (min-width: 600px) {
+.question-item {
+flex-direction: row; /* العودة للتخطيط الأفقي */
+align-items: center;
+justify-content: space-between;
+}
+.question-text {
+width: auto;
+margin-bottom: 0;
+}
+.input-group {
+flex-wrap: nowrap;
+width: auto;
+}
+.input-group input[type="text"] {
+width: 80px; /* عرض أكبر على الشاشات الكبيرة */
+}
+.result {
+width: 150px; /* عرض ثابت على الشاشات الكبيرة */
+font-size: 0.9em;
+}
+button {
+flex-grow: 0;
+min-width: auto;
+padding: 10px 15px;
+}
+}
 </style>
+
 </head>
 <body>
 
@@ -120,7 +163,7 @@ color: #856404;
 </div>
 
 <script>
-// البيانات التي استخرجتها من الصور
+// البيانات التي استخرجتها من الصور (لم تتغير)
 const quizData = {
 'Hören teil 2': {
 'Bein wettkampf': '1246',
@@ -157,7 +200,7 @@ const quizData = {
 },
 'Hören Teil 1 Neue': {
 'Teil 1 Beruf الحلوى': '14',
-'Der Bau': '134',
+'الرقم المقابل': '134', /* تم تعديل النص ليكون أوضح */
 'Erdbeeren ده اللي مع قطار النوم': '1245',
 'Fluaggesselschaft مع اي موضوع غير الحشرات': '15',
 'Fluaggesselschaft مع الحشرات': '135',
@@ -272,9 +315,10 @@ inputGroup.appendChild(revealButton);
 const resultDiv = document.createElement('div');
 resultDiv.className = 'result';
 resultDiv.id = `${sectionTitle}-${questionIndex}-result`;
-inputGroup.appendChild(resultDiv);
-
+// إدراج مجموعة الإدخال أولاً، ثم النتيجة
 itemDiv.appendChild(inputGroup);
+itemDiv.appendChild(resultDiv);
+
 sectionDiv.appendChild(itemDiv);
 
 questionIndex++;
@@ -296,7 +340,7 @@ if (userAnswer === correctAnswer) {
 resultElement.textContent = 'صحيحة! 🎉';
 resultElement.classList.add('correct');
 } else {
-resultElement.textContent = 'خاطئة. حاول مرة أخرى.';
+resultElement.textContent = 'خاطئة. الإجابة الصحيحة هي: ' + correctAnswer;
 resultElement.classList.add('incorrect');
 }
 }
@@ -310,8 +354,7 @@ inputElement.value = correctAnswer; // ملء حقل الإدخال بالإجا
 
 // إزالة تنسيقات النتيجة السابقة
 resultElement.className = 'result';
-
-resultElement.textContent = `الإجابة هي: ${correctAnswer}`;
+resultElement.textContent = `الإجابة ظاهرة.`;
 resultElement.classList.add('revealed');
 }
 
